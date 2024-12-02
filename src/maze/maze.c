@@ -2,15 +2,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "maze.h"
+#include "./maze.h"
 #include "../utils/utils.h"
+#include "../maze_loader/maze_loader.h"
 
 struct Maze {
     int size;
     int **blocks;
 };
 
-enum {
+typedef enum {
     FREE_BLOCK = 0,
     WALL_BLOCK = 1,
     INITIAL_BLOCK = 2,
@@ -18,26 +19,20 @@ enum {
     ACTUAL_BLOCK = 4,
 } Blocks;
 
-Maze* new_maze(int maze_size, int **mazeBlueprint) {
+Maze* new_maze(char *maze_file) {
+    int maze_size = read_maze_size(maze_file);
     if (maze_size <= 0) return NULL;
 
-    Maze *new_maze = (Maze *) malloc(sizeof(Maze));
-    if (new_maze == NULL) alloc_error();
+    Maze *maze = (Maze *) malloc(sizeof(Maze));
+    if (maze == NULL) alloc_error();
+    maze->size = maze_size;
 
-    new_maze->blocks = (int **) malloc(sizeof(int *) * maze_size);
-    if (new_maze->blocks == NULL) alloc_error();
+    maze->blocks = read_maze_blueprint(maze_file, maze);
+    return maze;
+}
 
-    for (int i = 0; i < maze_size; i++) {
-        new_maze->blocks[i] = (int *) malloc(sizeof(int) * maze_size);
-        if (new_maze->blocks[i] == NULL) alloc_error();
-
-        for (int j = 0; j < maze_size; j++) {
-            new_maze->blocks[i][j] = mazeBlueprint[i][j];
-        }
-    }
-
-    new_maze->size = maze_size;
-    return new_maze;
+int get_maze_size(Maze *maze) {
+    return maze->size;
 }
 
 void free_maze(Maze *maze) {
@@ -98,7 +93,6 @@ static Vector2 maze_find_current_position(Maze *maze) {
 }
 
 void maze_solve(Maze *maze) {
-    Vector2 current_pos = maze_find_current_position(maze);
-    Maze *aux_maze = new_maze(maze->size, maze->blocks);
+    // Vector2 current_pos = maze_find_current_position(maze);
 
 }
