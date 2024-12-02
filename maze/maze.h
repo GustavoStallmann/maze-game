@@ -3,7 +3,7 @@
 
 typedef struct Maze Maze;
 
-Maze* new_maze(int maze_size, int mazeBlueprint[maze_size][maze_size]);
+Maze* new_maze(int maze_size, int **mazeBlueprint);
 void free_maze(Maze *maze);
 void DrawMaze(Maze *maze);
 
