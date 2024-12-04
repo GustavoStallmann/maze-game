@@ -4,12 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "raylib.h"
 
 // Forward declaration of the Stack structure
 typedef struct Stack Stack;
 
 // Type definition for the stack elements
-typedef int stack_key;
+typedef Vector2 stack_key;
 
 /**
  * @brief Creates a new stack.
@@ -52,10 +53,24 @@ bool stack_is_empty(Stack *stack);
 void stack_free(Stack *stack);
 
 /**
+ * @brief Clear stack removing all nodes
+ *
+ * @param stack Pointer to the stack to be freed.
+ */
+bool stack_clear(Stack *stack);
+
+/**
  * @brief Prints the contents of the stack.
  *
  * @param stack Pointer to the stack to be printed.
  */
 void stack_print(Stack *stack);
+
+/**
+ * @brief return the stack length (amount of nodes)
+ *
+ * @param stack Pointer to the stack to be printed.
+ */
+int stack_get_length(Stack *stack);
 
 #endif

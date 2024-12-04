@@ -32,16 +32,19 @@ int** read_maze_blueprint(char *file_path, Maze *target_maze) {
         return NULL;
     }
 
-    int **maze_blueprint = (int **) malloc(sizeof(int *) * maze_size);
+    int **maze_blueprint = (int **) malloc(maze_size * sizeof(int *));
     if (maze_blueprint == NULL) alloc_error();
 
     for (int i = 0; i < maze_size; i++) {
-        maze_blueprint[i] = (int *) malloc(sizeof(int) * maze_size);
+        maze_blueprint[i] = (int *) malloc(maze_size * sizeof(int));
         if (maze_blueprint[i] == NULL) alloc_error();
 
         for (int j = 0; j < maze_size; j++) {
+            fseek(maze_file, 1, SEEK_CUR); // Jump the first char
             fscanf(maze_file, "%d", &maze_blueprint[i][j]);
+            printf("[%d]", maze_blueprint[i][j]);
         }
+        printf("\n");
     }
 
     fclose(maze_file);
