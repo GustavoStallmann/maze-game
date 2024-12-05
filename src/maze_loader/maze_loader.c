@@ -42,7 +42,6 @@ int** read_maze_blueprint(char *file_path, Maze *target_maze) {
         for (int j = 0; j < maze_size; j++) {
             fseek(maze_file, 1, SEEK_CUR); // Jump the first char
             fscanf(maze_file, "%d", &maze_blueprint[i][j]);
-            printf("[%d]", maze_blueprint[i][j]);
         }
         printf("\n");
     }

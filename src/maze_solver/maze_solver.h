@@ -6,7 +6,6 @@
 #include "../stack/stack.h"
 #include "../utils/utils.h"
 
-typedef struct Solver Solver;
 typedef enum {
     UP,
     RIGHT,

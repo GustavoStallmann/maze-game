@@ -1,19 +1,10 @@
 #include "maze_solver.h"
+#include <raylib.h>
 
 struct Solver {
     Vector2 *solution_path;
     uint solution_blocks;
 };
-
-Solver* new_solver( ) {
-    Solver* maze_solve = (Solver *) malloc(sizeof(Solver));
-    if (maze_solve == NULL) alloc_error();
-
-    maze_solve->solution_path = NULL;
-    maze_solve->solution_blocks = 0;
-
-    return maze_solve;
-}
 
 static Vector2 is_movement_valid(Maze *maze, Vector2 pos, Moves move_type) {
     if (maze == NULL) return (Vector2){-1, -1}; // Check for null maze pointer
@@ -51,23 +42,26 @@ static Vector2 is_movement_valid(Maze *maze, Vector2 pos, Moves move_type) {
     return movement_position;
 }
 
-static int solver_invert_solution_path(Solver *solver) {
+static int invert_solution_path(Vector2 *solution_path, int moves_count) {
+    if (moves_count <= 0) return 1;
 
+    for (int i = 0, last_i = moves_count - 1; i < last_i; i++, last_i--) {
+        Vector2 temp = solution_path[i];
+        solution_path[i] = solution_path[last_i];
+        solution_path[last_i] = temp;
+    }
+
+    return 0;
 }
 
-int solver_set_solution_path(Solver *solver) {
-
-}
-
-Solver* Solver_sove(Maze *maze) {
-    Solver *maze_solve = new_solver();
+Vector2* maze_solve(Maze *maze) {
     int free_block_amount = maze_get_block_amount(maze, FREE_BLOCK);
     if (free_block_amount <= 0) return NULL;
 
     Vector2 *blocks_order = (Vector2 *) calloc(free_block_amount, sizeof(Vector2));
     int visited_count = 0;
 
-    Vector2 initial_position = maze_find_position(maze, INITIAL_BLOCK);
+    Vector2 initial_position = maze_find_block(maze, INITIAL_BLOCK);
     Stack *available_pos = new_stack();
     stack_push(available_pos, initial_position);
 
@@ -104,5 +98,8 @@ Solver* Solver_sove(Maze *maze) {
         }
     }
 
-    return maze_solve;
+    int inverted_solution_path = invert_solution_path(blocks_order, visited_count);
+    if (!inverted_solution_path) return NULL;
+
+    return blocks_order;
 }

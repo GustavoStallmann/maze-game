@@ -76,7 +76,7 @@ void DrawMaze(Maze *maze) {
     }
 }
 
-Vector2 maze_find_position(Maze *maze, Blocks type) {
+Vector2 maze_find_block(Maze *maze, Blocks type) {
     for (int i = 0; i <= maze->size; i++) {
         for (int j = 0; j <= maze->size; j++) {
             if (maze->blocks[i][j] == type) {
@@ -93,7 +93,7 @@ int maze_set_block_type(Maze *maze, Vector2 block_pos, Blocks type) {
     int y = (int) block_pos.y;
     int maze_size = get_maze_size(maze);
 
-    if (maze_size < x || maze_size < y) return 1;
+    if (x < 0 || y < 0 || x >= maze_size || y >= maze_size) return 1;
 
     maze->blocks[x][y] = type;
     return 0;
@@ -105,6 +105,16 @@ Blocks maze_get_block_type(Maze *maze, Vector2 block_pos) {
 
     Blocks block_type = maze->blocks[x][y];
     return block_type;
+}
+
+int maze_set_actual_block(Maze *maze, Vector2 new_actual) {
+    Vector2 actual_block = maze_find_block(maze, ACTUAL_BLOCK);
+    if (actual_block.x >= 0 && actual_block.y >= 0) {
+        maze_set_block_type(maze, actual_block, VISITED_BLOCK);
+    }
+
+    maze_set_block_type(maze, new_actual, ACTUAL_BLOCK);
+    return 0;
 }
 
 int maze_get_block_amount(Maze *maze, Blocks type) {
@@ -136,5 +146,23 @@ void maze_set_solution_path(Maze *maze, Vector2 *solution_path) {
 
     for (int i = 0; solution_path[i].x != 0 || solution_path[i].y != 0; i++) {
         stack_push(maze->solution_path, solution_path[i]);
+    }
+}
+
+Vector2 maze_get_next_solution_step(Maze *maze) {
+    Vector2 next_step;
+    int popped_value = stack_pop(maze->solution_path, &next_step);
+    if (!popped_value) return (Vector2) {-1, -1};
+
+    return next_step;
+}
+
+void maze_print_maze(Maze *maze) {
+    printf("\n");
+    for (int i = 0; i < maze->size; i++) {
+        for (int j = 0; j < maze->size; j++) {
+            printf("[%d]", maze->blocks[i][j]);
+        }
+        printf("\n");
     }
 }

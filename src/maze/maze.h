@@ -21,11 +21,14 @@ Maze* new_maze(char *maze_file);
 int get_maze_size(Maze *maze);
 void free_maze(Maze *maze);
 void DrawMaze(Maze *maze);
-Vector2 maze_find_position(Maze *maze, Blocks position);
+Vector2 maze_find_block(Maze *maze, Blocks position);
 int maze_get_block_amount(Maze *maze, Blocks type);
 Blocks maze_get_block_type(Maze *maze, Vector2 block_pos);
 void maze_set_solution_path(Maze *maze, Vector2 *solution_path);
 Stack* maze_get_solution_path(Maze *maze);
 int maze_set_block_type(Maze *maze, Vector2 block_pos, Blocks type);
+int maze_set_actual_block(Maze *maze, Vector2 new_actual);
+Vector2 maze_get_next_solution_step(Maze *maze);
+void maze_print_maze(Maze *maze);
 
 #endif
