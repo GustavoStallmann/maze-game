@@ -7,8 +7,9 @@ int maze_anim(Maze *maze) {
     }
 
     Vector2 next_step = maze_get_next_solution_step(maze);
-    // if (next_step.x <= 0 || next_step.y <= 0) return 1;
+    printf("%f | %f\n", next_step.x, next_step.y);
+    if (next_step.x <= 0 || next_step.y <= 0) return 1;
 
-    // maze_set_actual_block(maze, next_step);
+    maze_set_actual_block(maze, next_step);
     return 0;
 }

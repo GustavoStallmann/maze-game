@@ -30,5 +30,6 @@ int maze_set_block_type(Maze *maze, Vector2 block_pos, Blocks type);
 int maze_set_actual_block(Maze *maze, Vector2 new_actual);
 Vector2 maze_get_next_solution_step(Maze *maze);
 void maze_print_maze(Maze *maze);
+void maze_print_solution(Maze *maze) ;
 
 #endif

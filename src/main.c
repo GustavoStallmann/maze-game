@@ -12,18 +12,19 @@ int main(void) {
 
     Vector2 *solve_order = maze_solve(game_maze);
     maze_set_solution_path(game_maze, solve_order);
+    maze_print_solution(game_maze);
 
-    maze_anim(game_maze);
-    maze_print_maze(game_maze);
+    // maze_anim(game_maze);
+    // maze_print_maze(game_maze);
 
-    maze_anim(game_maze);
-    maze_print_maze(game_maze);
+    // maze_anim(game_maze);
+    // maze_print_maze(game_maze);
 
     // InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Maze game");
     // SetTargetFPS(30);
     // int enable_anim = 0, limit = 0;
     // while (!WindowShouldClose()) {
-    //     if (limit >= 200) {
+    //     if (limit >= 50) {
     //         maze_anim(game_maze);
     //         limit = 0;
     //     }

@@ -85,11 +85,9 @@ bool stack_clear(Stack *stack) {
 
 void stack_print(Stack *stack) {
     if (stack == NULL) return;
-
     Node_stack *actual_node = stack->top;
     while (actual_node != NULL) {
-        printf("(%.f | %.f)", actual_node->value.x, actual_node->value.y);
-
+        printf("(%.d | %.d)", (int) actual_node->value.x, (int) actual_node->value.y);
         actual_node = actual_node->next;
     }
     printf("\n");

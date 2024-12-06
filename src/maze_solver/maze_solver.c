@@ -1,5 +1,6 @@
 #include "maze_solver.h"
 #include <raylib.h>
+#include <stdio.h>
 
 struct Solver {
     Vector2 *solution_path;
