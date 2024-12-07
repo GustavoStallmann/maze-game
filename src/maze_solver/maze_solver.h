@@ -8,8 +8,8 @@
 
 typedef enum {
     UP,
-    RIGHT,
     DOWN,
+    RIGHT,
     LEFT
 } Moves;
 

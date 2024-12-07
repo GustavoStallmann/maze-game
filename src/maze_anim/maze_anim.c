@@ -1,7 +1,7 @@
 #include "./maze_anim.h"
 
 int maze_anim(Maze *maze) {
-    Vector2 initial_block = maze_find_block(maze, INITIAL_BLOCK);
+    Vector2 initial_block = maze_get_block(maze, INITIAL_BLOCK);
     if (initial_block.x >= 0 || initial_block.y >= 0) {
         maze_set_block_type(maze, initial_block, ACTUAL_BLOCK);
     }

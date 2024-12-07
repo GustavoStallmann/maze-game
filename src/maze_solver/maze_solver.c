@@ -18,11 +18,11 @@ static Vector2 is_movement_valid(Maze *maze, Vector2 pos, Moves move_type) {
         case UP:
             movement_position = (Vector2){x, y-1};
             break;
-        case RIGHT:
-            movement_position = (Vector2){x+1, y};
-            break;
         case DOWN:
             movement_position = (Vector2){x, y+1};
+            break;
+        case RIGHT:
+            movement_position = (Vector2){x+1, y};
             break;
         case LEFT:
             movement_position = (Vector2){x-1, y};
@@ -31,7 +31,7 @@ static Vector2 is_movement_valid(Maze *maze, Vector2 pos, Moves move_type) {
             return (Vector2){-1, -1};
     }
 
-    int maze_size = get_maze_size(maze);
+    int maze_size = maze_get_size(maze);
     if (movement_position.x < 0 || movement_position.y < 0 ||
         movement_position.x >= maze_size || movement_position.y >= maze_size) {
         return (Vector2){-1, -1}; // Out-bound movement
@@ -43,8 +43,8 @@ static Vector2 is_movement_valid(Maze *maze, Vector2 pos, Moves move_type) {
     return movement_position;
 }
 
-static int invert_solution_path(Vector2 *solution_path, int moves_count) {
-    if (moves_count <= 0) return 1;
+static bool invert_solution_path(Vector2 *solution_path, int moves_count) {
+    if (moves_count <= 0) return false;
 
     for (int i = 0, last_i = moves_count - 1; i < last_i; i++, last_i--) {
         Vector2 temp = solution_path[i];
@@ -52,7 +52,7 @@ static int invert_solution_path(Vector2 *solution_path, int moves_count) {
         solution_path[last_i] = temp;
     }
 
-    return 0;
+    return true;
 }
 
 Vector2* maze_solve(Maze *maze) {
@@ -62,7 +62,7 @@ Vector2* maze_solve(Maze *maze) {
     Vector2 *blocks_order = (Vector2 *) calloc(free_block_amount, sizeof(Vector2));
     int visited_count = 0;
 
-    Vector2 initial_position = maze_find_block(maze, INITIAL_BLOCK);
+    Vector2 initial_position = maze_get_block(maze, INITIAL_BLOCK);
     Stack *available_pos = new_stack();
     stack_push(available_pos, initial_position);
 
@@ -79,8 +79,8 @@ Vector2* maze_solve(Maze *maze) {
 
         Vector2 moves[] = {
             is_movement_valid(maze, current_pos, UP),
-            is_movement_valid(maze, current_pos, RIGHT),
             is_movement_valid(maze, current_pos, DOWN),
+            is_movement_valid(maze, current_pos, RIGHT),
             is_movement_valid(maze, current_pos, LEFT)
         };
 
@@ -99,8 +99,10 @@ Vector2* maze_solve(Maze *maze) {
         }
     }
 
-    int inverted_solution_path = invert_solution_path(blocks_order, visited_count);
+    bool inverted_solution_path = invert_solution_path(blocks_order, visited_count);
     if (!inverted_solution_path) return NULL;
+
+    maze_set_solution_size(maze, visited_count);
 
     return blocks_order;
 }

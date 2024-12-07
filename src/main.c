@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include "raylib.h"
 #include "maze_anim/maze_anim.h"
 #include "./maze/maze.h"
@@ -11,32 +12,30 @@ int main(void) {
     maze_print_maze(game_maze);
 
     Vector2 *solve_order = maze_solve(game_maze);
-    maze_set_solution_path(game_maze, solve_order);
-    maze_print_solution(game_maze);
+    bool solution_setted = maze_set_solution_path(game_maze, solve_order);
+    if (!solution_setted) {
+        printf("Erro: nao foi possivel definir a solucao do labirinto");
+        return 1;
+    }
 
-    // maze_anim(game_maze);
-    // maze_print_maze(game_maze);
+    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Maze game");
+    SetTargetFPS(30);
+    int frameCounter = 0;
+    const int framesPerAnim = 20;
+    while (!WindowShouldClose()) {
+        if (frameCounter >= framesPerAnim) {
+            maze_anim(game_maze);
+            frameCounter = 0;
+        }
 
-    // maze_anim(game_maze);
-    // maze_print_maze(game_maze);
+        BeginDrawing();
+            ClearBackground(BLACK);
+            DrawMaze(game_maze);
+        EndDrawing();
+        frameCounter++;
+    }
 
-    // InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Maze game");
-    // SetTargetFPS(30);
-    // int enable_anim = 0, limit = 0;
-    // while (!WindowShouldClose()) {
-    //     if (limit >= 50) {
-    //         maze_anim(game_maze);
-    //         limit = 0;
-    //     }
-
-    //     BeginDrawing();
-    //         ClearBackground(BLACK);
-    //         DrawMaze(game_maze);
-    //     EndDrawing();
-    //     limit++;
-    // }
-
-    // free_maze(game_maze);
-    // CloseWindow();
+    maze_free(game_maze);
+    CloseWindow();
     return 0;
 }

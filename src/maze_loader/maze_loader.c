@@ -26,7 +26,7 @@ int** read_maze_blueprint(char *file_path, Maze *target_maze) {
         return NULL;
     }
 
-    int maze_size = get_maze_size(target_maze);
+    int maze_size = maze_get_size(target_maze);
     if (maze_size <= 0) {
         printf("Erro: nao foi possivel obter o tamanho do labirinto");
         return NULL;

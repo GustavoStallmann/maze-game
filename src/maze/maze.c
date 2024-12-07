@@ -1,12 +1,12 @@
 #include "./maze.h"
 #include "../utils/utils.h"
 #include "../maze_loader/maze_loader.h"
-#include <raylib.h>
 
 struct Maze {
     int size;
     int **blocks;
     Stack *solution_path;
+    int solution_size;
 };
 
 Maze* new_maze(char *maze_file) {
@@ -19,15 +19,16 @@ Maze* new_maze(char *maze_file) {
 
     maze->blocks = read_maze_blueprint(maze_file, maze);
     maze->solution_path = new_stack();
+    maze->solution_size = -1;
     return maze;
 }
 
-int get_maze_size(Maze *maze) {
+int maze_get_size(Maze *maze) {
     return maze->size;
 }
 
-void free_maze(Maze *maze) {
-    if (maze == NULL) return;
+bool maze_free(Maze *maze) {
+    if (maze == NULL) return false;
 
     for (int i = 0; i < maze->size; i++) {
         free(maze->blocks[i]);
@@ -36,10 +37,12 @@ void free_maze(Maze *maze) {
     stack_free(maze->solution_path);
     free(maze->blocks);
     free(maze);
+    return true;
 }
 
 void DrawMaze(Maze *maze) {
     int blockSize = WINDOW_HEIGHT / maze->size;
+    float circleSize = (float) blockSize / 4;
 
     int mazeWidth = blockSize * maze->size;
     int xStart = WINDOW_WIDTH/2 - mazeWidth/2;
@@ -49,14 +52,14 @@ void DrawMaze(Maze *maze) {
         for (int j = 0; j < maze->size; j++) {
             int blockX = xStart + (i*blockSize);
             int blockY = yStart + (j*blockSize);
-            int currentBlock = maze->blocks[i][j];
+            int currentBlock = maze->blocks[j][i];
 
             switch (currentBlock) {
                 case FREE_BLOCK:
                     DrawRectangleLines(blockX, blockY, blockSize, blockSize, LIGHTGRAY);
                     break;
                 case WALL_BLOCK:
-                    DrawRectangle(blockX, blockY, blockSize, blockSize, DARKGRAY);
+                    DrawRectangle(blockX, blockY, blockSize, blockSize, BLACK);
                     break;
                 case INITIAL_BLOCK:
                     DrawRectangleLines(blockX, blockY, blockSize, blockSize, RED);
@@ -66,17 +69,18 @@ void DrawMaze(Maze *maze) {
                     break;
                 case ACTUAL_BLOCK:
                     DrawRectangleLines(blockX, blockY, blockSize, blockSize, LIGHTGRAY);
-                    DrawCircle(blockX+blockSize/2, blockY+blockSize/2, (float) blockSize/4, PURPLE);
+                    DrawCircle(blockX+blockSize/2, blockY+blockSize/2, circleSize, BLUE);
                     break;
                 case VISITED_BLOCK:
-                    DrawRectangleLines(blockX, blockY, blockSize, blockSize, GREEN);
+                    DrawRectangleLines(blockX, blockY, blockSize, blockSize, WHITE);
+                    DrawCircle(blockX+blockSize/2, blockY+blockSize/2, circleSize/4, WHITE);
                     break;
             }
         }
     }
 }
 
-Vector2 maze_find_block(Maze *maze, Blocks type) {
+Vector2 maze_get_block(Maze *maze, Blocks type) {
     for (int i = 0; i < maze->size; i++) {
         for (int j = 0; j < maze->size; j++) {
             if (maze->blocks[i][j] == type) {
@@ -88,16 +92,16 @@ Vector2 maze_find_block(Maze *maze, Blocks type) {
     return (Vector2) {-1, -1};
 }
 
-int maze_set_block_type(Maze *maze, Vector2 block_pos, Blocks type) {
+bool maze_set_block_type(Maze *maze, Vector2 block_pos, Blocks type) {
     int x = (int) block_pos.x;
     int y = (int) block_pos.y;
-    if (maze->blocks == NULL || maze->blocks[x] == NULL) return 1;
+    if (maze->blocks == NULL || maze->blocks[x] == NULL) return false;
 
-    int maze_size = get_maze_size(maze);
-    if (x < 0 || y < 0 || x >= maze_size || y >= maze_size) return 1;
+    int maze_size = maze_get_size(maze);
+    if (x < 0 || y < 0 || x >= maze_size || y >= maze_size) return false;
 
     maze->blocks[x][y] = type;
-    return 0;
+    return true;
 }
 
 Blocks maze_get_block_type(Maze *maze, Vector2 block_pos) {
@@ -108,20 +112,20 @@ Blocks maze_get_block_type(Maze *maze, Vector2 block_pos) {
     return block_type;
 }
 
-int maze_set_actual_block(Maze *maze, Vector2 new_actual) {
-    if (maze == NULL || maze->blocks == NULL) return 1;
+bool maze_set_actual_block(Maze *maze, Vector2 new_actual) {
+    if (maze == NULL || maze->blocks == NULL) return false;
 
-    Vector2 actual_block = maze_find_block(maze, ACTUAL_BLOCK);
+    Vector2 actual_block = maze_get_block(maze, ACTUAL_BLOCK);
     if (actual_block.x >= 0 && actual_block.y >= 0) {
         maze_set_block_type(maze, actual_block, VISITED_BLOCK);
     }
 
-    if (maze_set_block_type(maze, new_actual, ACTUAL_BLOCK) != 0) return 1;
-    return 0;
+    if (maze_set_block_type(maze, new_actual, ACTUAL_BLOCK) != 0) return false;
+    return true;
 }
 
 int maze_get_block_amount(Maze *maze, Blocks type) {
-    if (maze == NULL || maze->blocks == NULL) return 0;
+    if (maze == NULL || maze->blocks == NULL) return -1;
 
     int block_amount = 0;
     for (int i = 0; i < maze->size; i++) {
@@ -140,16 +144,33 @@ Stack* maze_get_solution_path(Maze *maze) {
     return maze->solution_path;
 }
 
-void maze_set_solution_path(Maze *maze, Vector2 *solution_path) {
-    if (maze == NULL || solution_path == NULL) return;
+bool maze_set_solution_path(Maze *maze, Vector2 *solution_path) {
+    if (maze == NULL || solution_path == NULL) return false;
 
     if (maze->solution_path) {
         stack_clear(maze->solution_path); // Clear any existing solution path
     }
 
-    for (int i = 0; solution_path[i].x != -1 || solution_path[i].y != -1; i++) {
+    int solution_size = maze_get_solution_size(maze);
+    if (solution_size <= 0) return false;
+
+    for (int i = 0; i < solution_size; i++) {
         stack_push(maze->solution_path, solution_path[i]);
     }
+
+    return true;
+}
+
+bool maze_set_solution_size(Maze *maze, int solution_size) {
+    if (maze == NULL) return false;
+    if (solution_size < 0) return false;
+
+    maze->solution_size = solution_size;
+    return true;
+}
+
+int maze_get_solution_size(Maze *maze) {
+    return maze->solution_size;
 }
 
 Vector2 maze_get_next_solution_step(Maze *maze) {
@@ -171,6 +192,6 @@ void maze_print_maze(Maze *maze) {
 }
 
 void maze_print_solution(Maze *maze) {
-    printf("solucao\n");
+    printf("Solucao do labirinto: \n");
     stack_print(maze->solution_path);
 }
