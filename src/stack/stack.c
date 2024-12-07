@@ -54,6 +54,12 @@ bool stack_pop(Stack *stack, stack_key *value) {
     return true;
 }
 
+stack_key stack_peek(Stack *stack) {
+    if (!stack->top) return (Vector2) {-1, -1};
+
+    return stack->top->value;
+}
+
 bool stack_is_empty(Stack *stack) {
     if (stack == NULL) return false;
 

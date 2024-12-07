@@ -21,7 +21,8 @@ typedef struct Maze Maze;
 Maze* new_maze(char *maze_file);
 void  DrawMaze(Maze *maze);
 void  maze_print_maze(Maze *maze);
-void  maze_print_solution(Maze *maze) ;
+void  maze_print_solution(Maze *maze);
+bool  maze_remove_next_solution_step(Maze *maze);
 bool  maze_free(Maze *maze);
 
 

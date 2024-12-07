@@ -174,11 +174,17 @@ int maze_get_solution_size(Maze *maze) {
 }
 
 Vector2 maze_get_next_solution_step(Maze *maze) {
-    Vector2 next_step;
-    int popped_value = stack_pop(maze->solution_path, &next_step);
-    if (!popped_value) return (Vector2) {-1, -1};
+    Vector2 next_step = stack_peek(maze->solution_path);
 
     return next_step;
+}
+
+bool maze_remove_next_solution_step(Maze *maze) {
+    Vector2 step;
+    bool removed = stack_pop(maze->solution_path, &step);
+    if (!removed) return false;
+
+    return true;
 }
 
 void maze_print_maze(Maze *maze) {

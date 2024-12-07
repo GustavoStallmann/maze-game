@@ -3,5 +3,5 @@
 #include <raylib.h>
 #include <stdio.h>
 #include "../maze/maze.h"
-int maze_anim(Maze *maze);
+int maze_anim(Maze *maze, Stack *maze_movements);
 #endif

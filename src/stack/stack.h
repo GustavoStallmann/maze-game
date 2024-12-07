@@ -38,6 +38,14 @@ bool stack_push(Stack *stack, stack_key value);
 bool stack_pop(Stack *stack, stack_key *value);
 
 /**
+ * @brief Returns the value at the top of the stack without removing it.
+ *
+ * @param stack Pointer to the stack.
+ * @return stack_key The value at the top of the stack.
+ */
+stack_key stack_peek(Stack *stack);
+
+/**
  * @brief Checks if the stack is empty.
  *
  * @param stack Pointer to the stack.

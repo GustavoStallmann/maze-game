@@ -5,6 +5,7 @@
 #include "maze_solver/maze_solver.h"
 #include "./utils/utils.h"
 #include "./maze_anim/maze_anim.h"
+#include "stack/stack.h"
 
 int main(void) {
     char *maze_file = "./labirinto.txt";
@@ -17,14 +18,15 @@ int main(void) {
         printf("Erro: nao foi possivel definir a solucao do labirinto");
         return 1;
     }
+    Stack *track_maze_movements = new_stack();
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Maze game");
-    SetTargetFPS(30);
+    SetTargetFPS(60);
     int frameCounter = 0;
-    const int framesPerAnim = 20;
+    int framesPerAnim = 20;
     while (!WindowShouldClose()) {
         if (frameCounter >= framesPerAnim) {
-            maze_anim(game_maze);
+            maze_anim(game_maze, track_maze_movements);
             frameCounter = 0;
         }
 
