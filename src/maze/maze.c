@@ -46,12 +46,12 @@ bool maze_free(Maze *maze) {
 }
 
 void DrawMaze(Maze *maze) {
-    int blockSize = WINDOW_HEIGHT / maze->size;
+    int blockSize = WINDOW_HEIGHT / maze->size - 5;
     float circleSize = (float) blockSize / 4;
 
     int mazeWidth = blockSize * maze->size;
     int xStart = WINDOW_WIDTH/2 - mazeWidth/2;
-    int yStart = WINDOW_HEIGHT/2 - mazeWidth/2;
+    int yStart = WINDOW_HEIGHT/2 - mazeWidth/2-10;
 
     for (int i = 0; i < maze->size; i++) {
         for (int j = 0; j < maze->size; j++) {
@@ -61,24 +61,27 @@ void DrawMaze(Maze *maze) {
 
             switch (currentBlock) {
                 case FREE_BLOCK:
-                    DrawRectangleLines(blockX, blockY, blockSize, blockSize, LIGHTGRAY);
+                    DrawRectangle(blockX, blockY, blockSize, blockSize, LIGHTGRAY);
+                    DrawRectangleLines(blockX, blockY, blockSize, blockSize, WHITE);
                     break;
                 case WALL_BLOCK:
-                    DrawRectangle(blockX, blockY, blockSize, blockSize, MAROON);
+                    DrawRectangle(blockX, blockY, blockSize, blockSize, (Color){28, 36, 50, 255});
+                    DrawRectangleLines(blockX, blockY, blockSize, blockSize, LIGHTGRAY);
                     break;
                 case INITIAL_BLOCK:
                     DrawRectangleLines(blockX, blockY, blockSize, blockSize, RED);
                     break;
                 case TARGET_BLOCK:
-                    DrawRectangleLines(blockX, blockY, blockSize, blockSize, GREEN);
+                    DrawRectangle(blockX, blockY, blockSize, blockSize, GREEN);
                     break;
                 case ACTUAL_BLOCK:
-                    DrawRectangleLines(blockX, blockY, blockSize, blockSize, LIGHTGRAY);
-                    DrawCircle(blockX+blockSize/2, blockY+blockSize/2, circleSize, BLUE);
+                    DrawRectangle(blockX, blockY, blockSize, blockSize, GOLD);
                     break;
                 case VISITED_BLOCK:
+                    DrawRectangle(blockX, blockY, blockSize, blockSize, SKYBLUE);
                     DrawRectangleLines(blockX, blockY, blockSize, blockSize, WHITE);
-                    DrawCircle(blockX+blockSize/2, blockY+blockSize/2, circleSize/4, WHITE);
+                    break;
+                default:
                     break;
             }
         }

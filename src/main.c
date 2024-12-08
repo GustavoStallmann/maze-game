@@ -25,7 +25,7 @@ int main(void) {
 
     Stack *track_maze_movements = new_stack();
     int frameCounter = 0;
-    int framesPerAnim = 20;
+    int framesPerAnim = 5;
     while (!WindowShouldClose()) {
         if (frameCounter >= framesPerAnim) {
             maze_anim(game_maze, track_maze_movements);
