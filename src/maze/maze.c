@@ -10,22 +10,26 @@ struct Maze {
     int solution_size;
 };
 
-Maze* new_maze(char *maze_file) {
-    int maze_size = read_maze_size(maze_file);
-    if (maze_size <= 0) return NULL;
-
+Maze* new_maze( ) {
     Maze *maze = (Maze *) malloc(sizeof(Maze));
     if (maze == NULL) alloc_error();
-    maze->size = maze_size;
 
-    maze->blocks = read_maze_blueprint(maze_file, maze);
+    maze->size = 0;
     maze->solution_path = new_stack();
     maze->solution_size = -1;
+    maze->blocks = read_maze_blueprint(maze);
     return maze;
 }
 
 int maze_get_size(Maze *maze) {
     return maze->size;
+}
+
+bool maze_set_size(Maze *maze, int size) {
+    if (size < 0) return false;
+
+    maze->size = size;
+    return true;
 }
 
 bool maze_free(Maze *maze) {
@@ -60,7 +64,7 @@ void DrawMaze(Maze *maze) {
                     DrawRectangleLines(blockX, blockY, blockSize, blockSize, LIGHTGRAY);
                     break;
                 case WALL_BLOCK:
-                    DrawRectangle(blockX, blockY, blockSize, blockSize, RED);
+                    DrawRectangle(blockX, blockY, blockSize, blockSize, MAROON);
                     break;
                 case INITIAL_BLOCK:
                     DrawRectangleLines(blockX, blockY, blockSize, blockSize, RED);
@@ -188,7 +192,7 @@ bool maze_remove_next_solution_step(Maze *maze) {
     return true;
 }
 
-void maze_print_maze(Maze *maze) {
+void maze_print(Maze *maze) {
     printf("\n");
     for (int i = 0; i < maze->size; i++) {
         for (int j = 0; j < maze->size; j++) {

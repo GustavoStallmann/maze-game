@@ -18,9 +18,9 @@ typedef enum {
 
 typedef struct Maze Maze;
 
-Maze* new_maze(char *maze_file);
+Maze* new_maze();
 void  DrawMaze(Maze *maze);
-void  maze_print_maze(Maze *maze);
+void  maze_print(Maze *maze);
 void  maze_print_solution(Maze *maze);
 bool  maze_remove_next_solution_step(Maze *maze);
 bool  maze_free(Maze *maze);
@@ -35,6 +35,7 @@ Vector2  maze_get_block(Maze *maze, Blocks position);
 int      maze_get_solution_size(Maze *maze);
 
 
+bool maze_set_size(Maze *maze, int size);
 bool maze_set_solution_size(Maze *maze, int solution_size);
 bool maze_set_block_type(Maze *maze, Vector2 block_pos, Blocks type);
 bool maze_set_solution_path(Maze *maze, Vector2 *solution_path);
