@@ -58,4 +58,7 @@ objFolder:
 clean:
 	@ $(RM) ./objects $(PROJ_NAME) *~
 
+run:
+	./maze-game < labirinto.txt
+
 .PHONY: all clean
