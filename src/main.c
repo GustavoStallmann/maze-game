@@ -22,6 +22,7 @@ int main(void) {
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Maze game");
     SetTargetFPS(60);
+
     int frameCounter = 0;
     int framesPerAnim = 20;
     while (!WindowShouldClose()) {

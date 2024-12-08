@@ -27,6 +27,7 @@ int** read_maze_blueprint(char *file_path, Maze *target_maze) {
     }
 
     int maze_size = maze_get_size(target_maze);
+    printf("Maze size: %d\n", maze_size);
     if (maze_size <= 0) {
         printf("Erro: nao foi possivel obter o tamanho do labirinto");
         return NULL;
@@ -35,15 +36,18 @@ int** read_maze_blueprint(char *file_path, Maze *target_maze) {
     int **maze_blueprint = (int **) malloc(maze_size * sizeof(int *));
     if (maze_blueprint == NULL) alloc_error();
 
+    fseek(maze_file, 1, SEEK_CUR); // Jump the first char
+    if (maze_size >= 10) {
+        fseek(maze_file, 1, SEEK_CUR); // Jump the sec char
+    }
+
     for (int i = 0; i < maze_size; i++) {
         maze_blueprint[i] = (int *) malloc(maze_size * sizeof(int));
         if (maze_blueprint[i] == NULL) alloc_error();
 
         for (int j = 0; j < maze_size; j++) {
-            fseek(maze_file, 1, SEEK_CUR); // Jump the first char
             fscanf(maze_file, "%d", &maze_blueprint[i][j]);
         }
-        printf("\n");
     }
 
     fclose(maze_file);

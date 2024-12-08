@@ -1,5 +1,4 @@
 #include "./maze_anim.h"
-#include "../utils/utils.h"
 #include <raylib.h>
 
 static bool is_movement_valid(Vector2 actual_block, Vector2 next_block) {
@@ -30,10 +29,9 @@ int maze_anim(Maze *maze, Stack *maze_movements) {
         maze_set_block_type(maze, initial_block, ACTUAL_BLOCK);
     }
 
+    Vector2 actual_block = maze_get_block(maze, ACTUAL_BLOCK);
     Vector2 next_step = maze_get_next_solution_step(maze);
     if (next_step.x < 0 || next_step.y < 0) return 1;
-
-    Vector2 actual_block = maze_get_block(maze, ACTUAL_BLOCK);
 
     if (is_movement_valid(actual_block, next_step)) {
         maze_remove_next_solution_step(maze);

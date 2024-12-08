@@ -1,6 +1,7 @@
 #include "./maze.h"
 #include "../utils/utils.h"
 #include "../maze_loader/maze_loader.h"
+#include <raylib.h>
 
 struct Maze {
     int size;
@@ -59,7 +60,7 @@ void DrawMaze(Maze *maze) {
                     DrawRectangleLines(blockX, blockY, blockSize, blockSize, LIGHTGRAY);
                     break;
                 case WALL_BLOCK:
-                    DrawRectangle(blockX, blockY, blockSize, blockSize, BLACK);
+                    DrawRectangle(blockX, blockY, blockSize, blockSize, RED);
                     break;
                 case INITIAL_BLOCK:
                     DrawRectangleLines(blockX, blockY, blockSize, blockSize, RED);
