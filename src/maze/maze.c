@@ -174,9 +174,9 @@ void DrawMaze(Maze *maze) {
     float circleSize = (float) blockSize / 4;
 
     int mazeWidth = blockSize * maze->size;
-    int windowPadding = 20;
-    int xStart = WINDOW_WIDTH/2 - mazeWidth/2;
-    int yStart = WINDOW_HEIGHT/2 - mazeWidth/2-windowPadding;
+    int windowPadding = 10;
+    int xStart = (WINDOW_WIDTH-mazeWidth)/2;
+    int yStart = (WINDOW_HEIGHT-mazeWidth)/2;
 
     for (int i = 0; i < maze->size; i++) {
         for (int j = 0; j < maze->size; j++) {
@@ -210,6 +210,16 @@ void DrawMaze(Maze *maze) {
                     break;
             }
         }
+    }
+
+    Vector2 targetBlock = maze_get_block(maze, TARGET_BLOCK);
+    if (targetBlock.x < 0 && targetBlock.y < 0) {
+
+        int textSize = 200;
+        int centerX = (WINDOW_WIDTH-textSize*2)/2;
+        int centerY = (WINDOW_HEIGHT-textSize)/2;
+        DrawRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, (Color) {0, 0, 0, 100});
+        DrawText("FIM", centerX, centerY, textSize, GREEN);
     }
 }
 
