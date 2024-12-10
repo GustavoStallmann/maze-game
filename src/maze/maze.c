@@ -170,11 +170,11 @@ bool maze_remove_next_solution_step(Maze *maze) {
 
 // Maze drawing and printing
 void DrawMaze(Maze *maze) {
-    int blockSize = WINDOW_HEIGHT / maze->size - 5;
+    int windowPadding = 50;
+    int blockSize = (WINDOW_HEIGHT-windowPadding) / maze->size;
     float circleSize = (float) blockSize / 4;
 
     int mazeWidth = blockSize * maze->size;
-    int windowPadding = 10;
     int xStart = (WINDOW_WIDTH-mazeWidth)/2;
     int yStart = (WINDOW_HEIGHT-mazeWidth)/2;
 
