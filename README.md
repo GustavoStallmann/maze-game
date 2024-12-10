@@ -29,7 +29,7 @@ make
 ```
 Execute o programa com:
 ```bash
-make run < labirinto.txt
+make run
 ```
 
 O programa irá carregar o labirinto da entrada fornecida e exibir a solução graficamente.
