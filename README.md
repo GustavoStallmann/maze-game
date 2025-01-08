@@ -37,3 +37,5 @@ O programa irá carregar o labirinto da entrada fornecida e exibir a solução g
 ## Recursos Adicionais
 * **Visualização Gráfica**: O algoritmo mostra, em tempo real, o caminho sendo traçado para a solução do labirinto.
 * **Customização de Labirintos**: Você pode fornecer diferentes configurações de labirinto editando o arquivo de entrada.
+
+![Screenshot From 2025-01-08 12-42-38](https://github.com/user-attachments/assets/cda6043e-cdd8-4e87-a488-67e9a250864c)
